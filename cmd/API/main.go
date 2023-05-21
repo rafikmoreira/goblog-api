@@ -9,6 +9,15 @@ import (
 func main() {
 	r := gin.Default()
 
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message":  "Welcome to the Go Blog API",
+			"author":   "Rafik Moreira",
+			"github":   "https://github.com/rafikmoreira",
+			"linkedin": "https://www.linkedin.com/in/rafikmoreira/",
+		})
+	})
+
 	// Post routes
 	r.POST("/post", middleware.AuthMiddleware(), handler.CreatePostHandler)
 	r.GET("/post", handler.ListPostHandler)
