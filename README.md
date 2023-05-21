@@ -4,6 +4,9 @@
 
 This repository contains the code for a Go API that implements a simple blog with user management, post creation, and commenting functionality.
 
+> **Warning**
+> This project is in its early stages, and I'm using it as an opportunity to deepen my knowledge of Go. Therefore, I kindly request that you refrain from using it in a production environment for the time being, as there may be several bugs that could potentially lead to problems.
+
 ## Installation
 
 To install and run this project, follow these steps:
