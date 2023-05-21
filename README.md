@@ -2,6 +2,8 @@
 
 <img src=".documentation_files/blog-go.png" alt="imagem de uma máquina de escrever com alguns livros ao lado">
 
+![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
+
 This repository contains the code for a Go API that implements a simple blog with user management, post creation, and commenting functionality.
 
 > **Warning**
