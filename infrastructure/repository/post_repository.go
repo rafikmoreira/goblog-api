@@ -59,9 +59,4 @@ func (r *PostRepository) Destroy(data *domain.Post, id *string) error {
 	return nil
 }
 
-func newPostRepository() *domain.IPostRepository {
-	var repository domain.IPostRepository = &PostRepository{}
-	return &repository
-}
-
-var PostRepositoryImplementation = newPostRepository()
+var PostRepositoryImplementation = domain.NewPostRepository(new(PostRepository))

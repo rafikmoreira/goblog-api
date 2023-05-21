@@ -74,9 +74,4 @@ func (r *UserRepository) Destroy(data *domain.User, id *string) error {
 	return nil
 }
 
-func newUserRepository() *domain.IUserRepository {
-	var repository domain.IUserRepository = &UserRepository{}
-	return &repository
-}
-
-var UserRepositoryImplementation = newUserRepository()
+var UserRepositoryImplementation = domain.NewUserRepository(new(UserRepository))

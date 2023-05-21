@@ -24,9 +24,4 @@ func (r *CommentRepository) Destroy(data *domain.Comment, postId *string, commen
 	return nil
 }
 
-func newCommentRepository() *domain.ICommentRepository {
-	var repository domain.ICommentRepository = &CommentRepository{}
-	return &repository
-}
-
-var CommentRepositoryImplementation = newCommentRepository()
+var CommentRepositoryImplementation = domain.NewCommentRepository(new(CommentRepository))

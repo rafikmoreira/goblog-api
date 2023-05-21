@@ -24,3 +24,7 @@ type IUserRepository interface {
 	List() (*[]User, error)
 	Destroy(data *User, id *string) error
 }
+
+func NewUserRepository(userRepository IUserRepository) *IUserRepository {
+	return &userRepository
+}

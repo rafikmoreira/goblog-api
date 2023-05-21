@@ -29,3 +29,7 @@ type Post struct {
 	UserID     uint           `json:"user_id"`
 	Comments   *[]Comment     `json:"comments,omitempty"`
 }
+
+func NewPostRepository(postRepository IPostRepository) *IPostRepository {
+	return &postRepository
+}
