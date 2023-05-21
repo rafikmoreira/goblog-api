@@ -14,7 +14,7 @@ To install and run this project, follow these steps:
 4. Run the following command to download the project dependencies:
 
    ```shell
-   go mod download
+   go mod tidy
    ```
 ## Dependencies
 This project uses the following third-party dependencies:
