@@ -25,12 +25,5 @@ type Post struct {
 	Title      string         `json:"title" binding:"required"`
 	Subtitle   string         `json:"subtitle"`
 	Body       string         `json:"body" binding:"required"`
-}
-
-func NewPost(data *Post) (*Post, error) {
-	post := new(Post)
-	post.Title = data.Title
-	post.Subtitle = data.Subtitle
-	post.Body = data.Body
-	return post, nil
+	UserID     uint           `json:"user_id"`
 }
