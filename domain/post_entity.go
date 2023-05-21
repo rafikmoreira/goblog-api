@@ -26,5 +26,6 @@ type Post struct {
 	Subtitle   string         `json:"subtitle"`
 	Body       string         `json:"body" binding:"required"`
 	User       User
-	UserID     uint `json:"user_id"`
+	UserID     uint       `json:"user_id"`
+	Comments   *[]Comment `json:"comments,omitempty"`
 }

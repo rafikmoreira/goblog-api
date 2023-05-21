@@ -18,8 +18,8 @@ type User struct {
 }
 
 type UserRepository interface {
-	Create(data *User) (*User, error)
-	Update(data *User) (*User, error)
+	Create(data *User) error
+	Update(data *User, id string) (*User, error)
 	GetByID(id string) (*User, error)
 	List() (*[]User, error)
 	Destroy(data *User, id string) error

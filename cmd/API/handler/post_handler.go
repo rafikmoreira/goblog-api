@@ -41,7 +41,7 @@ func ListPostHandler(c *gin.Context) {
 }
 
 func GetPostHandler(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("postId")
 	post, err := application.NewPostUseCaseImplementation.GetByID(id)
 
 	if err != nil {
@@ -57,7 +57,7 @@ func GetPostHandler(c *gin.Context) {
 func UpdatePostHandler(c *gin.Context) {
 	data := &domain.Post{}
 	err := c.ShouldBindJSON(data)
-	id := c.Param("id")
+	id := c.Param("postId")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -75,7 +75,7 @@ func UpdatePostHandler(c *gin.Context) {
 }
 
 func DeletePostHandler(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("postId")
 	err := application.NewPostUseCaseImplementation.Destroy(id)
 
 	if err != nil {

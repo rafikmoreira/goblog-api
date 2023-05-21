@@ -41,7 +41,7 @@ func ListUserHandler(c *gin.Context) {
 }
 
 func GetUserHandler(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("userId")
 	user, err := application.NewUserUseCaseImplementation.GetByID(id)
 
 	if err != nil {
@@ -57,7 +57,7 @@ func GetUserHandler(c *gin.Context) {
 func UpdateUserHandler(c *gin.Context) {
 	data := &domain.User{}
 	err := c.ShouldBindJSON(data)
-	id := c.Param("id")
+	id := c.Param("userId")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -75,7 +75,7 @@ func UpdateUserHandler(c *gin.Context) {
 }
 
 func DeleteUserHandler(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("userId")
 	err := application.NewUserUseCaseImplementation.Destroy(id)
 
 	if err != nil {

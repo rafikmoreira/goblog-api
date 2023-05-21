@@ -31,7 +31,7 @@ func (r *PostRepository) Update(data *domain.Post, id string) (*domain.Post, err
 }
 func (r *PostRepository) GetByID(id string) (*domain.Post, error) {
 	post := new(domain.Post)
-	err := db.Connection.Preload("User").First(&post, id).Error
+	err := db.Connection.Preload("User").Preload("Comments").First(&post, id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,6 @@ func (r *PostRepository) Destroy(data *domain.Post, id string) error {
 	}
 	return nil
 }
-
 func NewPostRepository() *PostRepository {
 	return &PostRepository{}
 }
