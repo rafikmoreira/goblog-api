@@ -22,19 +22,24 @@ func main() {
 	r.POST("/post", middleware.AuthMiddleware(), handler.CreatePostHandler)
 	r.GET("/post", handler.ListPostHandler)
 	r.GET("/post/:postId", handler.GetPostHandler)
-	r.PATCH("/post/:postId", handler.UpdatePostHandler)
-	r.DELETE("/post/:postId", handler.DeletePostHandler)
+	r.PATCH("/post/:postId", middleware.AuthMiddleware(), handler.UpdatePostHandler)
+	r.DELETE("/post/:postId", middleware.AuthMiddleware(), handler.DeletePostHandler)
 	// Comment routes
-	r.POST("/post/:postId/comment", handler.CreateCommentHandler)
-	r.DELETE("/post/:postId/comment/:commentId", handler.DeleteCommentHandler)
+	r.POST("/post/:postId/comment", middleware.AuthMiddleware(), handler.CreateCommentHandler)
+	r.DELETE("/post/:postId/comment/:commentId", middleware.AuthMiddleware(), handler.DeleteCommentHandler)
 	// User routes
 	r.POST("/user", handler.CreateUserHandler)
 	r.GET("/user", handler.ListUserHandler)
 	r.GET("/user/:userId", handler.GetUserHandler)
-	r.PATCH("/user/:userId", handler.UpdateUserHandler)
-	r.DELETE("/user/:userId", handler.DeleteUserHandler)
+	r.PATCH("/user/:userId", middleware.AuthMiddleware(), handler.UpdateUserHandler)
+	r.DELETE("/user/:userId", middleware.AuthMiddleware(), handler.DeleteUserHandler)
 
-	err := r.Run(":3333")
+	err := r.SetTrustedProxies(nil)
+	if err != nil {
+		panic(err)
+	}
+
+	err = r.Run(":3333")
 
 	if err != nil {
 		panic(err)
