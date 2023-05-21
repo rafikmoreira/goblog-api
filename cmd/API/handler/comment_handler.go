@@ -17,7 +17,7 @@ func CreateCommentHandler(c *gin.Context) {
 		return
 	}
 
-	_, err = application.NewCommentUseCaseImplementation.Create(comment, postId)
+	_, err = application.NewCommentUseCaseImplementation.Create(comment, &postId)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -32,7 +32,7 @@ func DeleteCommentHandler(c *gin.Context) {
 	commentId := c.Param("commentId")
 	postId := c.Param("postId")
 
-	err := application.NewCommentUseCaseImplementation.Destroy(postId, commentId)
+	err := application.NewCommentUseCaseImplementation.Destroy(&postId, &commentId)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

@@ -7,24 +7,27 @@ import (
 
 type NewPostUseCase struct{}
 
-func (u *NewPostUseCase) Create(data *domain.Post) (*domain.Post, error) {
-	err := repository.PostRepositoryImplementation.Create(data)
+var postRepository = *repository.PostRepositoryImplementation
+
+func (u *NewPostUseCase) Create(data *domain.Post) error {
+	err := postRepository.Create(data)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return data, nil
+	return nil
 }
 
-func (u *NewPostUseCase) Update(data *domain.Post, id string) (*domain.Post, error) {
-	update, err := repository.PostRepositoryImplementation.Update(data, id)
+func (u *NewPostUseCase) Update(data *domain.Post, id *string) (*domain.Post, error) {
+	update, err := postRepository.Update(data, id)
+
 	if err != nil {
 		return nil, err
 	}
 	return update, nil
 }
 
-func (u *NewPostUseCase) GetByID(id string) (*domain.Post, error) {
-	post, err := repository.PostRepositoryImplementation.GetByID(id)
+func (u *NewPostUseCase) GetByID(id *string) (*domain.Post, error) {
+	post, err := postRepository.GetByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -32,15 +35,15 @@ func (u *NewPostUseCase) GetByID(id string) (*domain.Post, error) {
 }
 
 func (u *NewPostUseCase) List() (*[]domain.Post, error) {
-	list, err := repository.PostRepositoryImplementation.List()
+	list, err := postRepository.List()
 	if err != nil {
 		return nil, err
 	}
 	return list, nil
 }
 
-func (u *NewPostUseCase) Destroy(id string) error {
-	err := repository.PostRepositoryImplementation.Destroy(&domain.Post{}, id)
+func (u *NewPostUseCase) Destroy(id *string) error {
+	err := postRepository.Destroy(&domain.Post{}, id)
 	if err != nil {
 		return err
 	}

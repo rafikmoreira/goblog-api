@@ -14,3 +14,8 @@ type Comment struct {
 	Body       string         `json:"body" binding:"required"`
 	PostID     uint           `json:"post_id" binding:"required"`
 }
+
+type ICommentRepository interface {
+	Create(data *Comment, postId *string) error
+	Destroy(data *Comment, postId *string, commentId *string) error
+}

@@ -7,7 +7,7 @@ import (
 
 type CommentRepository struct{}
 
-func (r *CommentRepository) Create(data *domain.Comment, postId string) error {
+func (r *CommentRepository) Create(data *domain.Comment, postId *string) error {
 	//data.PostID = postId
 	err := db.Connection.Create(data).Error
 	if err != nil {
@@ -15,15 +15,18 @@ func (r *CommentRepository) Create(data *domain.Comment, postId string) error {
 	}
 	return nil
 }
-func (r *CommentRepository) Destroy(data *domain.Comment, postId string, commentId string) error {
-	err := db.Connection.Delete(data, "id = ? and post_id = ?", commentId, postId).Error
+
+func (r *CommentRepository) Destroy(data *domain.Comment, postId *string, commentId *string) error {
+	err := db.Connection.Delete(data, "id = ? and post_id = ?", *commentId, *postId).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func NewCommentRepository() *CommentRepository {
-	return &CommentRepository{}
+
+func newCommentRepository() *domain.ICommentRepository {
+	var repository domain.ICommentRepository = &CommentRepository{}
+	return &repository
 }
 
-var CommentRepositoryImplementation = NewCommentRepository()
+var CommentRepositoryImplementation = newCommentRepository()

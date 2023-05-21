@@ -7,16 +7,18 @@ import (
 
 type NewCommentUseCase struct{}
 
-func (u *NewCommentUseCase) Create(data *domain.Comment, postId string) (*domain.Comment, error) {
-	err := repository.CommentRepositoryImplementation.Create(data, postId)
+var commentRepository = *repository.CommentRepositoryImplementation
+
+func (u *NewCommentUseCase) Create(data *domain.Comment, postId *string) (*domain.Comment, error) {
+	err := commentRepository.Create(data, postId)
 	if err != nil {
 		return nil, err
 	}
 	return data, nil
 }
 
-func (u *NewCommentUseCase) Destroy(postId string, commentId string) error {
-	err := repository.CommentRepositoryImplementation.Destroy(&domain.Comment{}, postId, commentId)
+func (u *NewCommentUseCase) Destroy(postId *string, commentId *string) error {
+	err := commentRepository.Destroy(&domain.Comment{}, postId, commentId)
 	if err != nil {
 		return err
 	}

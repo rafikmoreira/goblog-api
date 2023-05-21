@@ -23,9 +23,10 @@ func (r *UserRepository) Create(data *domain.User) error {
 	}
 	return nil
 }
-func (r *UserRepository) Update(data *domain.User, id string) (*domain.User, error) {
+
+func (r *UserRepository) Update(data *domain.User, id *string) (*domain.User, error) {
 	user := &domain.User{}
-	err := db.Connection.First(user, id).Error
+	err := db.Connection.First(user, *id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -44,14 +45,16 @@ func (r *UserRepository) Update(data *domain.User, id string) (*domain.User, err
 	}
 	return user, nil
 }
-func (r *UserRepository) GetByID(id string) (*domain.User, error) {
+
+func (r *UserRepository) GetByID(id *string) (*domain.User, error) {
 	user := new(domain.User)
-	err := db.Connection.Preload("Posts").First(&user, id).Error
+	err := db.Connection.Preload("Posts").First(&user, *id).Error
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
 }
+
 func (r *UserRepository) List() (*[]domain.User, error) {
 	users := new([]domain.User)
 	err := db.Connection.Find(&users).Error
@@ -62,16 +65,18 @@ func (r *UserRepository) List() (*[]domain.User, error) {
 
 	return users, nil
 }
-func (r *UserRepository) Destroy(data *domain.User, id string) error {
-	err := db.Connection.Delete(data, id).Error
+
+func (r *UserRepository) Destroy(data *domain.User, id *string) error {
+	err := db.Connection.Delete(data, *id).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func NewUserRepository() *UserRepository {
-	return &UserRepository{}
+func newUserRepository() *domain.IUserRepository {
+	var repository domain.IUserRepository = &UserRepository{}
+	return &repository
 }
 
-var UserRepositoryImplementation = NewUserRepository()
+var UserRepositoryImplementation = newUserRepository()

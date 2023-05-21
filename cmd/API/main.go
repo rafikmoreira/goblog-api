@@ -3,13 +3,14 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/rafikmoreira/go-blog-api/cmd/API/handler"
+	"github.com/rafikmoreira/go-blog-api/cmd/API/middleware"
 )
 
 func main() {
 	r := gin.Default()
 
 	// Post routes
-	r.POST("/post", handler.CreatePostHandler)
+	r.POST("/post", middleware.AuthMiddleware(), handler.CreatePostHandler)
 	r.GET("/post", handler.ListPostHandler)
 	r.GET("/post/:postId", handler.GetPostHandler)
 	r.PATCH("/post/:postId", handler.UpdatePostHandler)

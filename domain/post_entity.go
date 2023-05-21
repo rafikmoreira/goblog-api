@@ -10,9 +10,9 @@ type IPost interface {
 
 type IPostRepository interface {
 	Create(data *Post) error
-	Update(data *Post, id string) (*Post, error)
-	Destroy(data *Post, id string) error
-	GetByID(id string) (*Post, error)
+	Update(data *Post, id *string) (*Post, error)
+	Destroy(data *Post, id *string) error
+	GetByID(id *string) (*Post, error)
 	List() (*[]Post, error)
 }
 
@@ -25,7 +25,7 @@ type Post struct {
 	Title      string         `json:"title" binding:"required"`
 	Subtitle   string         `json:"subtitle"`
 	Body       string         `json:"body" binding:"required"`
-	User       User
-	UserID     uint       `json:"user_id"`
-	Comments   *[]Comment `json:"comments,omitempty"`
+	User       User           `json:"user,omitempty"`
+	UserID     uint           `json:"user_id"`
+	Comments   *[]Comment     `json:"comments,omitempty"`
 }

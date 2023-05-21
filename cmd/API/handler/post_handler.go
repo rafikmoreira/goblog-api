@@ -17,7 +17,7 @@ func CreatePostHandler(c *gin.Context) {
 		return
 	}
 
-	_, err = application.NewPostUseCaseImplementation.Create(post)
+	err = application.NewPostUseCaseImplementation.Create(post)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -27,7 +27,6 @@ func CreatePostHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, post)
 }
-
 func ListPostHandler(c *gin.Context) {
 	posts, err := application.NewPostUseCaseImplementation.List()
 	if err != nil {
@@ -39,10 +38,9 @@ func ListPostHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, posts)
 }
-
 func GetPostHandler(c *gin.Context) {
 	id := c.Param("postId")
-	post, err := application.NewPostUseCaseImplementation.GetByID(id)
+	post, err := application.NewPostUseCaseImplementation.GetByID(&id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -53,7 +51,6 @@ func GetPostHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, post)
 }
-
 func UpdatePostHandler(c *gin.Context) {
 	data := &domain.Post{}
 	err := c.ShouldBindJSON(data)
@@ -62,7 +59,7 @@ func UpdatePostHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	post, err := application.NewPostUseCaseImplementation.Update(data, id)
+	post, err := application.NewPostUseCaseImplementation.Update(data, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -73,10 +70,9 @@ func UpdatePostHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, post)
 }
-
 func DeletePostHandler(c *gin.Context) {
 	id := c.Param("postId")
-	err := application.NewPostUseCaseImplementation.Destroy(id)
+	err := application.NewPostUseCaseImplementation.Destroy(&id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

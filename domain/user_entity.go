@@ -17,10 +17,10 @@ type User struct {
 	Posts      *[]Post        `json:"posts,omitempty" gorm:"foreignKey:UserID" `
 }
 
-type UserRepository interface {
+type IUserRepository interface {
 	Create(data *User) error
-	Update(data *User, id string) (*User, error)
-	GetByID(id string) (*User, error)
+	Update(data *User, id *string) (*User, error)
+	GetByID(id *string) (*User, error)
 	List() (*[]User, error)
-	Destroy(data *User, id string) error
+	Destroy(data *User, id *string) error
 }
