@@ -39,7 +39,7 @@ func (r *PostRepository) GetByID(id string) (*domain.Post, error) {
 }
 func (r *PostRepository) List() (*[]domain.Post, error) {
 	posts := new([]domain.Post)
-	err := db.Connection.Find(posts).Error
+	err := db.Connection.Preload("User").Find(posts).Error
 
 	if err != nil {
 		return nil, err

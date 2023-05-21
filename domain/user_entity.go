@@ -13,8 +13,8 @@ type User struct {
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	FullName   string         `json:"full_name" binding:"required"`
 	Email      string         `json:"email" binding:"required"`
-	Password   string         `json:"password" binding:"required"`
-	Posts      *[]Post        `json:"posts" gorm:"foreignKey:UserID"`
+	Password   string         `json:"-" binding:"required"`
+	Posts      *[]Post        `json:"posts,omitempty" gorm:"foreignKey:UserID" `
 }
 
 type UserRepository interface {
