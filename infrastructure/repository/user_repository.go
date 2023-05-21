@@ -46,7 +46,7 @@ func (r *UserRepository) Update(data *domain.User, id string) (*domain.User, err
 }
 func (r *UserRepository) GetByID(id string) (*domain.User, error) {
 	user := new(domain.User)
-	err := db.Connection.First(&user, id).Error
+	err := db.Connection.Preload("Posts").First(&user, id).Error
 	if err != nil {
 		return nil, err
 	}

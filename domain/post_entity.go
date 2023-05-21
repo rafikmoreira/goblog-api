@@ -25,5 +25,6 @@ type Post struct {
 	Title      string         `json:"title" binding:"required"`
 	Subtitle   string         `json:"subtitle"`
 	Body       string         `json:"body" binding:"required"`
-	UserID     uint           `json:"user_id"`
+	User       User
+	UserID     uint `json:"user_id" binding:"required"`
 }
