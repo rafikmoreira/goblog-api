@@ -16,7 +16,7 @@ func (r *CommentRepository) Create(data *domain.Comment, postId string) error {
 	return nil
 }
 func (r *CommentRepository) Destroy(data *domain.Comment, postId string, commentId string) error {
-	err := db.Connection.Delete(data, "id = ? and PostId = ?", commentId, postId).Error
+	err := db.Connection.Delete(data, "id = ? and post_id = ?", commentId, postId).Error
 	if err != nil {
 		return err
 	}
