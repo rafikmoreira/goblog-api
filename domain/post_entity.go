@@ -9,11 +9,11 @@ type IPost interface {
 }
 
 type IPostRepository interface {
-	Create(data *Post) error
-	Update(data *Post, id *string) (*Post, error)
-	Destroy(data *Post, id *string) error
-	GetByID(id *string) (*Post, error)
-	List() (*[]Post, error)
+	Create(db *gorm.DB, data *Post) error
+	Update(db *gorm.DB, data *Post, id *string) (*Post, error)
+	Destroy(db *gorm.DB, data *Post, id *string) error
+	GetByID(db *gorm.DB, id *string) (*Post, error)
+	List(db *gorm.DB) (*[]Post, error)
 }
 
 type Post struct {

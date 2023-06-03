@@ -26,4 +26,4 @@ func newDBConnection() *gorm.DB {
 	return db
 }
 
-var Connection = newDBConnection()
+var DBConnection = newDBConnection()

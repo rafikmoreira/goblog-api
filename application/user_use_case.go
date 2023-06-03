@@ -2,51 +2,54 @@ package application
 
 import (
 	"github.com/rafikmoreira/go-blog-api/domain"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/repository"
+	"github.com/rafikmoreira/go-blog-api/infrastructure/db"
 )
 
-type NewUserUseCase struct{}
+type userUseCase struct{}
 
-var userRepository = *repository.UserRepositoryImplementation
-
-func (u *NewUserUseCase) Create(data *domain.User) (*domain.User, error) {
-	err := userRepository.Create(data)
+func (u *userUseCase) Create(repository *domain.IUserRepository, data *domain.User) (*domain.User, error) {
+	userRepository := *repository
+	err := userRepository.Create(db.DBConnection, data)
 	if err != nil {
 		return nil, err
 	}
 	return data, nil
 }
 
-func (u *NewUserUseCase) Update(data *domain.User, id *string) (*domain.User, error) {
-	update, err := userRepository.Update(data, id)
+func (u *userUseCase) Update(repository *domain.IUserRepository, data *domain.User, id *string) (*domain.User, error) {
+	userRepository := *repository
+	update, err := userRepository.Update(db.DBConnection, data, id)
 	if err != nil {
 		return nil, err
 	}
 	return update, nil
 }
 
-func (u *NewUserUseCase) GetByID(id *string) (*domain.User, error) {
-	user, err := userRepository.GetByID(id)
+func (u *userUseCase) GetByID(repository *domain.IUserRepository, id *string) (*domain.User, error) {
+	userRepository := *repository
+	user, err := userRepository.GetByID(db.DBConnection, id)
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-func (u *NewUserUseCase) List() (*[]domain.User, error) {
-	list, err := userRepository.List()
+func (u *userUseCase) List(repository *domain.IUserRepository) (*[]domain.User, error) {
+	userRepository := *repository
+	list, err := userRepository.List(db.DBConnection)
 	if err != nil {
 		return nil, err
 	}
 	return list, nil
 }
 
-func (u *NewUserUseCase) Destroy(id *string) error {
-	err := userRepository.Destroy(&domain.User{}, id)
+func (u *userUseCase) Destroy(repository *domain.IUserRepository, id *string) error {
+	userRepository := *repository
+	err := userRepository.Destroy(db.DBConnection, &domain.User{}, id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-var NewUserUseCaseImplementation NewUserUseCase
+var UserUseCaseImplementation = new(userUseCase)

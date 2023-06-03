@@ -2,13 +2,13 @@ package repository
 
 import (
 	"github.com/rafikmoreira/go-blog-api/domain"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/db"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type UserRepository struct{}
 
-func (r *UserRepository) Create(data *domain.User) error {
+func (r *UserRepository) Create(db *gorm.DB, data *domain.User) error {
 	bytePass, err := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
 
 	if err != nil {
@@ -17,16 +17,16 @@ func (r *UserRepository) Create(data *domain.User) error {
 
 	data.Password = string(bytePass)
 
-	err = db.Connection.Create(data).Error
+	err = db.Create(data).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *UserRepository) Update(data *domain.User, id *string) (*domain.User, error) {
+func (r *UserRepository) Update(db *gorm.DB, data *domain.User, id *string) (*domain.User, error) {
 	user := &domain.User{}
-	err := db.Connection.First(user, *id).Error
+	err := db.First(user, *id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -39,25 +39,25 @@ func (r *UserRepository) Update(data *domain.User, id *string) (*domain.User, er
 		}
 		user.Password = string(bytePass)
 	}
-	err = db.Connection.Save(user).Error
+	err = db.Save(user).Error
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-func (r *UserRepository) GetByID(id *string) (*domain.User, error) {
+func (r *UserRepository) GetByID(db *gorm.DB, id *string) (*domain.User, error) {
 	user := new(domain.User)
-	err := db.Connection.Preload("Posts").First(&user, *id).Error
+	err := db.Preload("Posts").First(&user, *id).Error
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-func (r *UserRepository) List() (*[]domain.User, error) {
+func (r *UserRepository) List(db *gorm.DB) (*[]domain.User, error) {
 	users := new([]domain.User)
-	err := db.Connection.Find(&users).Error
+	err := db.Find(&users).Error
 
 	if err != nil {
 		return nil, err
@@ -66,8 +66,8 @@ func (r *UserRepository) List() (*[]domain.User, error) {
 	return users, nil
 }
 
-func (r *UserRepository) Destroy(data *domain.User, id *string) error {
-	err := db.Connection.Delete(data, *id).Error
+func (r *UserRepository) Destroy(db *gorm.DB, data *domain.User, id *string) error {
+	err := db.Delete(data, *id).Error
 	if err != nil {
 		return err
 	}
