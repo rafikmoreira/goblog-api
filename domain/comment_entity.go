@@ -16,8 +16,8 @@ type Comment struct {
 }
 
 type ICommentRepository interface {
-	Create(data *Comment, postId *string) error
-	Destroy(data *Comment, postId *string, commentId *string) error
+	Create(db *gorm.DB, data *Comment, postId *string) error
+	Destroy(db *gorm.DB, data *Comment, postId *string, commentId *string) error
 }
 
 func NewCommentRepository(commentRepository ICommentRepository) *ICommentRepository {

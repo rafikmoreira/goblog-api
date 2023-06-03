@@ -2,27 +2,27 @@ package application
 
 import (
 	"github.com/rafikmoreira/go-blog-api/domain"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/repository"
+	"github.com/rafikmoreira/go-blog-api/infrastructure/db"
 )
 
-type NewCommentUseCase struct{}
+type commentUseCase struct{}
 
-var commentRepository = *repository.CommentRepositoryImplementation
-
-func (u *NewCommentUseCase) Create(data *domain.Comment, postId *string) (*domain.Comment, error) {
-	err := commentRepository.Create(data, postId)
+func (u *commentUseCase) Create(repository *domain.ICommentRepository, data *domain.Comment, postId *string) (*domain.Comment, error) {
+	commentRepository := *repository
+	err := commentRepository.Create(db.DBConnection, data, postId)
 	if err != nil {
 		return nil, err
 	}
 	return data, nil
 }
 
-func (u *NewCommentUseCase) Destroy(postId *string, commentId *string) error {
-	err := commentRepository.Destroy(&domain.Comment{}, postId, commentId)
+func (u *commentUseCase) Destroy(repository *domain.ICommentRepository, postId *string, commentId *string) error {
+	commentRepository := *repository
+	err := commentRepository.Destroy(db.DBConnection, &domain.Comment{}, postId, commentId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-var NewCommentUseCaseImplementation NewCommentUseCase
+var CommentUseCaseImplementation = new(commentUseCase)
