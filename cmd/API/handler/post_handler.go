@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rafikmoreira/go-blog-api/application"
 	"github.com/rafikmoreira/go-blog-api/domain"
+	"github.com/rafikmoreira/go-blog-api/infrastructure/repository"
 	"net/http"
 )
 
@@ -17,7 +18,7 @@ func CreatePostHandler(c *gin.Context) {
 		return
 	}
 
-	err = application.NewPostUseCaseImplementation.Create(post)
+	err = application.PostUseCaseImplementation.Create(repository.PostRepositoryImplementation, post)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -28,7 +29,7 @@ func CreatePostHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, post)
 }
 func ListPostHandler(c *gin.Context) {
-	posts, err := application.NewPostUseCaseImplementation.List()
+	posts, err := application.PostUseCaseImplementation.List(repository.PostRepositoryImplementation)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "não foi possível listar as postagens",
@@ -40,7 +41,7 @@ func ListPostHandler(c *gin.Context) {
 }
 func GetPostHandler(c *gin.Context) {
 	id := c.Param("postId")
-	post, err := application.NewPostUseCaseImplementation.GetByID(&id)
+	post, err := application.PostUseCaseImplementation.GetByID(repository.PostRepositoryImplementation, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -59,7 +60,7 @@ func UpdatePostHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	post, err := application.NewPostUseCaseImplementation.Update(data, &id)
+	post, err := application.PostUseCaseImplementation.Update(repository.PostRepositoryImplementation, data, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -72,7 +73,7 @@ func UpdatePostHandler(c *gin.Context) {
 }
 func DeletePostHandler(c *gin.Context) {
 	id := c.Param("postId")
-	err := application.NewPostUseCaseImplementation.Destroy(&id)
+	err := application.PostUseCaseImplementation.Destroy(repository.PostRepositoryImplementation, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

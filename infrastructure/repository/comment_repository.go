@@ -2,22 +2,22 @@ package repository
 
 import (
 	"github.com/rafikmoreira/go-blog-api/domain"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/db"
+	"gorm.io/gorm"
 )
 
 type CommentRepository struct{}
 
-func (r *CommentRepository) Create(data *domain.Comment, postId *string) error {
+func (r *CommentRepository) Create(db *gorm.DB, data *domain.Comment, postId *string) error {
 	//data.PostID = postId
-	err := db.Connection.Create(data).Error
+	err := db.Create(data).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *CommentRepository) Destroy(data *domain.Comment, postId *string, commentId *string) error {
-	err := db.Connection.Delete(data, "id = ? and post_id = ?", *commentId, *postId).Error
+func (r *CommentRepository) Destroy(db *gorm.DB, data *domain.Comment, postId *string, commentId *string) error {
+	err := db.Delete(data, "id = ? and post_id = ?", *commentId, *postId).Error
 	if err != nil {
 		return err
 	}

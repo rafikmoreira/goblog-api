@@ -2,23 +2,23 @@ package application
 
 import (
 	"github.com/rafikmoreira/go-blog-api/domain"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/repository"
+	"github.com/rafikmoreira/go-blog-api/infrastructure/db"
 )
 
-type NewPostUseCase struct{}
+type postUseCase struct{}
 
-var postRepository = *repository.PostRepositoryImplementation
-
-func (u *NewPostUseCase) Create(data *domain.Post) error {
-	err := postRepository.Create(data)
+func (u *postUseCase) Create(repository *domain.IPostRepository, data *domain.Post) error {
+	postRepository := *repository
+	err := postRepository.Create(db.DBConnection, data)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (u *NewPostUseCase) Update(data *domain.Post, id *string) (*domain.Post, error) {
-	update, err := postRepository.Update(data, id)
+func (u *postUseCase) Update(repository *domain.IPostRepository, data *domain.Post, id *string) (*domain.Post, error) {
+	postRepository := *repository
+	update, err := postRepository.Update(db.DBConnection, data, id)
 
 	if err != nil {
 		return nil, err
@@ -26,28 +26,31 @@ func (u *NewPostUseCase) Update(data *domain.Post, id *string) (*domain.Post, er
 	return update, nil
 }
 
-func (u *NewPostUseCase) GetByID(id *string) (*domain.Post, error) {
-	post, err := postRepository.GetByID(id)
+func (u *postUseCase) GetByID(repository *domain.IPostRepository, id *string) (*domain.Post, error) {
+	postRepository := *repository
+	post, err := postRepository.GetByID(db.DBConnection, id)
 	if err != nil {
 		return nil, err
 	}
 	return post, nil
 }
 
-func (u *NewPostUseCase) List() (*[]domain.Post, error) {
-	list, err := postRepository.List()
+func (u *postUseCase) List(repository *domain.IPostRepository) (*[]domain.Post, error) {
+	postRepository := *repository
+	list, err := postRepository.List(db.DBConnection)
 	if err != nil {
 		return nil, err
 	}
 	return list, nil
 }
 
-func (u *NewPostUseCase) Destroy(id *string) error {
-	err := postRepository.Destroy(&domain.Post{}, id)
+func (u *postUseCase) Destroy(repository *domain.IPostRepository, id *string) error {
+	postRepository := *repository
+	err := postRepository.Destroy(db.DBConnection, &domain.Post{}, id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-var NewPostUseCaseImplementation NewPostUseCase
+var PostUseCaseImplementation = new(postUseCase)
