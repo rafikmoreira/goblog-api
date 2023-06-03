@@ -9,7 +9,7 @@ type commentUseCase struct{}
 
 func (u *commentUseCase) Create(repository *domain.ICommentRepository, data *domain.Comment, postId *string) (*domain.Comment, error) {
 	commentRepository := *repository
-	err := commentRepository.Create(db.DBConnection, data, postId)
+	err := commentRepository.Create(db.Connection, data, postId)
 	if err != nil {
 		return nil, err
 	}
@@ -18,7 +18,7 @@ func (u *commentUseCase) Create(repository *domain.ICommentRepository, data *dom
 
 func (u *commentUseCase) Destroy(repository *domain.ICommentRepository, postId *string, commentId *string) error {
 	commentRepository := *repository
-	err := commentRepository.Destroy(db.DBConnection, &domain.Comment{}, postId, commentId)
+	err := commentRepository.Destroy(db.Connection, &domain.Comment{}, postId, commentId)
 	if err != nil {
 		return err
 	}

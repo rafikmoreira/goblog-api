@@ -9,13 +9,13 @@ import (
 type UserRepository struct{}
 
 func (r *UserRepository) Create(db *gorm.DB, data *domain.User) error {
-	bytePass, err := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
 
+	password, err := domain.PasswordHash(&data.Password)
 	if err != nil {
 		return err
 	}
 
-	data.Password = string(bytePass)
+	data.Password = *password
 
 	err = db.Create(data).Error
 	if err != nil {
@@ -49,6 +49,17 @@ func (r *UserRepository) Update(db *gorm.DB, data *domain.User, id *string) (*do
 func (r *UserRepository) GetByID(db *gorm.DB, id *string) (*domain.User, error) {
 	user := new(domain.User)
 	err := db.Preload("Posts").First(&user, *id).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (r *UserRepository) GetByEmail(db *gorm.DB, email *string) (*domain.User, error) {
+	user := new(domain.User)
+	err := db.First(&user,
+		"email = ?", *email,
+	).Error
 	if err != nil {
 		return nil, err
 	}

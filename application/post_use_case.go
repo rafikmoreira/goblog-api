@@ -9,7 +9,7 @@ type postUseCase struct{}
 
 func (u *postUseCase) Create(repository *domain.IPostRepository, data *domain.Post) error {
 	postRepository := *repository
-	err := postRepository.Create(db.DBConnection, data)
+	err := postRepository.Create(db.Connection, data)
 	if err != nil {
 		return err
 	}
@@ -18,7 +18,7 @@ func (u *postUseCase) Create(repository *domain.IPostRepository, data *domain.Po
 
 func (u *postUseCase) Update(repository *domain.IPostRepository, data *domain.Post, id *string) (*domain.Post, error) {
 	postRepository := *repository
-	update, err := postRepository.Update(db.DBConnection, data, id)
+	update, err := postRepository.Update(db.Connection, data, id)
 
 	if err != nil {
 		return nil, err
@@ -28,7 +28,7 @@ func (u *postUseCase) Update(repository *domain.IPostRepository, data *domain.Po
 
 func (u *postUseCase) GetByID(repository *domain.IPostRepository, id *string) (*domain.Post, error) {
 	postRepository := *repository
-	post, err := postRepository.GetByID(db.DBConnection, id)
+	post, err := postRepository.GetByID(db.Connection, id)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func (u *postUseCase) GetByID(repository *domain.IPostRepository, id *string) (*
 
 func (u *postUseCase) List(repository *domain.IPostRepository) (*[]domain.Post, error) {
 	postRepository := *repository
-	list, err := postRepository.List(db.DBConnection)
+	list, err := postRepository.List(db.Connection)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (u *postUseCase) List(repository *domain.IPostRepository) (*[]domain.Post, 
 
 func (u *postUseCase) Destroy(repository *domain.IPostRepository, id *string) error {
 	postRepository := *repository
-	err := postRepository.Destroy(db.DBConnection, &domain.Post{}, id)
+	err := postRepository.Destroy(db.Connection, &domain.Post{}, id)
 	if err != nil {
 		return err
 	}

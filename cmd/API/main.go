@@ -18,6 +18,8 @@ func main() {
 		})
 	})
 
+	// Auth routes
+	r.POST("/auth", handler.AuthHandler)
 	// Post routes
 	r.POST("/post", middleware.AuthMiddleware(), handler.CreatePostHandler)
 	r.GET("/post", handler.ListPostHandler)
