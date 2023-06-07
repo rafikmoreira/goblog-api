@@ -6,7 +6,6 @@ import (
 	"github.com/rafikmoreira/go-blog-api/cmd/API/config"
 	"github.com/rafikmoreira/go-blog-api/domain"
 	"github.com/rafikmoreira/go-blog-api/infrastructure/db"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/repository"
 	"net/http"
 	"time"
 )
@@ -16,9 +15,9 @@ type Credentials struct {
 	Password string `json:"password"`
 }
 
-func AuthHandler(c *gin.Context) {
+func AuthHandler(c *gin.Context, repository *domain.IUserRepository) {
 	user := new(domain.User)
-	userRepository := *repository.UserRepositoryImplementation
+	userRepository := *repository
 	credentials := new(Credentials)
 
 	err := c.BindJSON(credentials)

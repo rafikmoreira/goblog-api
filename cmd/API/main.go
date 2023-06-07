@@ -26,8 +26,6 @@ func main() {
 		})
 	})
 
-	// auth routes
-	r.POST("/auth", handler.AuthHandler)
 	// post routes
 	r.POST("/post", middleware.AuthMiddleware(), func(context *gin.Context) {
 		handler.CreatePostHandler(context, postRepository)
@@ -44,6 +42,7 @@ func main() {
 	r.DELETE("/post/:postId", middleware.AuthMiddleware(), func(context *gin.Context) {
 		handler.DeletePostHandler(context, postRepository)
 	})
+
 	// comment routes
 	r.POST("/post/:postId/comment", middleware.AuthMiddleware(), func(context *gin.Context) {
 		handler.CreateCommentHandler(context, commentRepository)
@@ -51,6 +50,7 @@ func main() {
 	r.DELETE("/post/:postId/comment/:commentId", middleware.AuthMiddleware(), func(context *gin.Context) {
 		handler.DeleteCommentHandler(context, commentRepository)
 	})
+
 	// user routes
 	r.POST("/user", func(context *gin.Context) {
 		handler.CreateUserHandler(context, userRepository)
@@ -66,6 +66,11 @@ func main() {
 	})
 	r.DELETE("/user/:userId", middleware.AuthMiddleware(), func(context *gin.Context) {
 		handler.DeleteUserHandler(context, userRepository)
+	})
+
+	// auth routes
+	r.POST("/auth", func(context *gin.Context) {
+		handler.AuthHandler(context, userRepository)
 	})
 
 	err := r.SetTrustedProxies(nil)
