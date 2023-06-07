@@ -1,14 +1,14 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/rafikmoreira/go-blog-api/application"
 	"github.com/rafikmoreira/go-blog-api/domain"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/repository"
-	"net/http"
 )
 
-func CreateCommentHandler(c *gin.Context) {
+func CreateCommentHandler(c *gin.Context, repository *domain.ICommentRepository) {
 	comment := new(domain.Comment)
 	postId := c.Param("postId")
 	err := c.ShouldBindJSON(&comment)
@@ -18,7 +18,7 @@ func CreateCommentHandler(c *gin.Context) {
 		return
 	}
 
-	_, err = application.CommentUseCaseImplementation.Create(repository.CommentRepositoryImplementation, comment, &postId)
+	_, err = application.CommentUseCaseImplementation.Create(repository, comment, &postId)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -29,11 +29,11 @@ func CreateCommentHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, comment)
 }
 
-func DeleteCommentHandler(c *gin.Context) {
+func DeleteCommentHandler(c *gin.Context, repository *domain.ICommentRepository) {
 	commentId := c.Param("commentId")
 	postId := c.Param("postId")
 
-	err := application.CommentUseCaseImplementation.Destroy(repository.CommentRepositoryImplementation, &postId, &commentId)
+	err := application.CommentUseCaseImplementation.Destroy(repository, &postId, &commentId)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

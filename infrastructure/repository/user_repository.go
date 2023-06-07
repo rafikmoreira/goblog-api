@@ -84,5 +84,3 @@ func (r *UserRepository) Destroy(db *gorm.DB, data *domain.User, id *string) err
 	}
 	return nil
 }
-
-var UserRepositoryImplementation = domain.NewUserRepository(new(UserRepository))
