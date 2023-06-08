@@ -5,44 +5,46 @@ import (
 	"gorm.io/gorm"
 )
 
-type PostRepository struct{}
+type PostRepository struct {
+	DB *gorm.DB
+}
 
-func (r *PostRepository) Create(db *gorm.DB, data *domain.Post) error {
-	err := db.Create(data).Error
+func (r *PostRepository) Create(data *domain.Post) error {
+	err := r.DB.Create(data).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *PostRepository) Update(db *gorm.DB, data *domain.Post, id *string) (*domain.Post, error) {
+func (r *PostRepository) Update(data *domain.Post, id *string) (*domain.Post, error) {
 	post := &domain.Post{}
-	err := db.First(post, *id).Error
+	err := r.DB.First(post, *id).Error
 	if err != nil {
 		return nil, err
 	}
 	post.Title = data.Title
 	post.Subtitle = data.Subtitle
 	post.Body = data.Body
-	err = db.Save(post).Error
+	err = r.DB.Save(post).Error
 	if err != nil {
 		return nil, err
 	}
 	return post, nil
 }
 
-func (r *PostRepository) GetByID(db *gorm.DB, id *string) (*domain.Post, error) {
+func (r *PostRepository) GetByID(id *string) (*domain.Post, error) {
 	post := new(domain.Post)
-	err := db.Preload("User").Preload("Comments").First(&post, *id).Error
+	err := r.DB.Preload("User").Preload("Comments").First(&post, *id).Error
 	if err != nil {
 		return nil, err
 	}
 	return post, nil
 }
 
-func (r *PostRepository) List(db *gorm.DB) (*[]domain.Post, error) {
+func (r *PostRepository) List() (*[]domain.Post, error) {
 	posts := new([]domain.Post)
-	err := db.Preload("User").Find(posts).Error
+	err := r.DB.Preload("User").Find(posts).Error
 
 	if err != nil {
 		return nil, err
@@ -51,8 +53,8 @@ func (r *PostRepository) List(db *gorm.DB) (*[]domain.Post, error) {
 	return posts, nil
 }
 
-func (r *PostRepository) Destroy(db *gorm.DB, data *domain.Post, id *string) error {
-	err := db.Delete(data, *id).Error
+func (r *PostRepository) Destroy(data *domain.Post, id *string) error {
+	err := r.DB.Delete(data, *id).Error
 	if err != nil {
 		return err
 	}

@@ -6,9 +6,11 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserRepository struct{}
+type UserRepository struct {
+	DB *gorm.DB
+}
 
-func (r *UserRepository) Create(db *gorm.DB, data *domain.User) error {
+func (r *UserRepository) Create(data *domain.User) error {
 
 	password, err := domain.PasswordHash(&data.Password)
 	if err != nil {
@@ -17,16 +19,16 @@ func (r *UserRepository) Create(db *gorm.DB, data *domain.User) error {
 
 	data.Password = *password
 
-	err = db.Create(data).Error
+	err = r.DB.Create(data).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *UserRepository) Update(db *gorm.DB, data *domain.User, id *string) (*domain.User, error) {
+func (r *UserRepository) Update(data *domain.User, id *string) (*domain.User, error) {
 	user := &domain.User{}
-	err := db.First(user, *id).Error
+	err := r.DB.First(user, *id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -39,25 +41,25 @@ func (r *UserRepository) Update(db *gorm.DB, data *domain.User, id *string) (*do
 		}
 		user.Password = string(bytePass)
 	}
-	err = db.Save(user).Error
+	err = r.DB.Save(user).Error
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-func (r *UserRepository) GetByID(db *gorm.DB, id *string) (*domain.User, error) {
+func (r *UserRepository) GetByID(id *string) (*domain.User, error) {
 	user := new(domain.User)
-	err := db.Preload("Posts").First(&user, *id).Error
+	err := r.DB.Preload("Posts").First(&user, *id).Error
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-func (r *UserRepository) GetByEmail(db *gorm.DB, email *string) (*domain.User, error) {
+func (r *UserRepository) GetByEmail(email *string) (*domain.User, error) {
 	user := new(domain.User)
-	err := db.First(&user,
+	err := r.DB.First(&user,
 		"email = ?", *email,
 	).Error
 	if err != nil {
@@ -66,9 +68,9 @@ func (r *UserRepository) GetByEmail(db *gorm.DB, email *string) (*domain.User, e
 	return user, nil
 }
 
-func (r *UserRepository) List(db *gorm.DB) (*[]domain.User, error) {
+func (r *UserRepository) List() (*[]domain.User, error) {
 	users := new([]domain.User)
-	err := db.Find(&users).Error
+	err := r.DB.Find(&users).Error
 
 	if err != nil {
 		return nil, err
@@ -77,8 +79,8 @@ func (r *UserRepository) List(db *gorm.DB) (*[]domain.User, error) {
 	return users, nil
 }
 
-func (r *UserRepository) Destroy(db *gorm.DB, data *domain.User, id *string) error {
-	err := db.Delete(data, *id).Error
+func (r *UserRepository) Destroy(data *domain.User, id *string) error {
+	err := r.DB.Delete(data, *id).Error
 	if err != nil {
 		return err
 	}

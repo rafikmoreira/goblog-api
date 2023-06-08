@@ -5,19 +5,21 @@ import (
 	"gorm.io/gorm"
 )
 
-type CommentRepository struct{}
+type CommentRepository struct {
+	DB *gorm.DB
+}
 
-func (r *CommentRepository) Create(db *gorm.DB, data *domain.Comment, postId *string) error {
+func (r *CommentRepository) Create(data *domain.Comment, postId *string) error {
 	//data.PostID = postId
-	err := db.Create(data).Error
+	err := r.DB.Create(data).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *CommentRepository) Destroy(db *gorm.DB, data *domain.Comment, postId *string, commentId *string) error {
-	err := db.Delete(data, "id = ? and post_id = ?", *commentId, *postId).Error
+func (r *CommentRepository) Destroy(data *domain.Comment, postId *string, commentId *string) error {
+	err := r.DB.Delete(data, "id = ? and post_id = ?", *commentId, *postId).Error
 	if err != nil {
 		return err
 	}

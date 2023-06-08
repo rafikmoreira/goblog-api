@@ -16,10 +16,11 @@ type Comment struct {
 }
 
 type ICommentRepository interface {
-	Create(db *gorm.DB, data *Comment, postId *string) error
-	Destroy(db *gorm.DB, data *Comment, postId *string, commentId *string) error
+	Create(data *Comment, postId *string) error
+	Destroy(data *Comment, postId *string, commentId *string) error
 }
 
-func NewCommentRepository(commentRepository ICommentRepository) *ICommentRepository {
-	return &commentRepository
+type ICommentUseCase interface {
+	Create(data *Comment, postId *string) (*Comment, error)
+	Destroy(postId *string, commentId *string) error
 }

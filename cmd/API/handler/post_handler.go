@@ -4,13 +4,16 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/rafikmoreira/go-blog-api/application"
 	"github.com/rafikmoreira/go-blog-api/domain"
 )
 
-func CreatePostHandler(c *gin.Context, repository *domain.IPostRepository) {
-	post := new(domain.Post)
+type PostHandler struct {
+	PostUseCase *domain.IPostUseCase
+}
 
+func (h PostHandler) CreatePost(c *gin.Context) {
+	post := new(domain.Post)
+	postUseCase := *h.PostUseCase
 	err := c.ShouldBindJSON(&post)
 
 	if err != nil {
@@ -18,7 +21,7 @@ func CreatePostHandler(c *gin.Context, repository *domain.IPostRepository) {
 		return
 	}
 
-	err = application.PostUseCaseImplementation.Create(repository, post)
+	err = postUseCase.Create(post)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -28,8 +31,9 @@ func CreatePostHandler(c *gin.Context, repository *domain.IPostRepository) {
 	}
 	c.JSON(http.StatusCreated, post)
 }
-func ListPostHandler(c *gin.Context, repository *domain.IPostRepository) {
-	posts, err := application.PostUseCaseImplementation.List(repository)
+func (h PostHandler) ListPost(c *gin.Context) {
+	postUseCase := *h.PostUseCase
+	posts, err := postUseCase.List()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "não foi possível listar as postagens",
@@ -39,9 +43,10 @@ func ListPostHandler(c *gin.Context, repository *domain.IPostRepository) {
 
 	c.JSON(http.StatusOK, posts)
 }
-func GetPostHandler(c *gin.Context, repository *domain.IPostRepository) {
+func (h PostHandler) GetPost(c *gin.Context) {
 	id := c.Param("postId")
-	post, err := application.PostUseCaseImplementation.GetByID(repository, &id)
+	postUseCase := *h.PostUseCase
+	post, err := postUseCase.GetByID(&id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -52,7 +57,8 @@ func GetPostHandler(c *gin.Context, repository *domain.IPostRepository) {
 
 	c.JSON(http.StatusOK, post)
 }
-func UpdatePostHandler(c *gin.Context, repository *domain.IPostRepository) {
+func (h PostHandler) UpdatePost(c *gin.Context) {
+	postUseCase := *h.PostUseCase
 	data := &domain.Post{}
 	err := c.ShouldBindJSON(data)
 	id := c.Param("postId")
@@ -60,7 +66,7 @@ func UpdatePostHandler(c *gin.Context, repository *domain.IPostRepository) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	post, err := application.PostUseCaseImplementation.Update(repository, data, &id)
+	post, err := postUseCase.Update(data, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -71,9 +77,10 @@ func UpdatePostHandler(c *gin.Context, repository *domain.IPostRepository) {
 
 	c.JSON(http.StatusOK, post)
 }
-func DeletePostHandler(c *gin.Context, repository *domain.IPostRepository) {
+func (h PostHandler) DeletePost(c *gin.Context) {
+	postUseCase := *h.PostUseCase
 	id := c.Param("postId")
-	err := application.PostUseCaseImplementation.Destroy(repository, &id)
+	err := postUseCase.Destroy(&id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
