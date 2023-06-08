@@ -4,11 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rafikmoreira/go-blog-api/application"
 	"github.com/rafikmoreira/go-blog-api/domain"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/repository"
 	"net/http"
 )
 
-func CreateUserHandler(c *gin.Context) {
+func CreateUserHandler(c *gin.Context, repository *domain.IUserRepository) {
 	user := new(domain.User)
 
 	err := c.ShouldBindJSON(&user)
@@ -18,7 +17,7 @@ func CreateUserHandler(c *gin.Context) {
 		return
 	}
 
-	_, err = application.UserUseCaseImplementation.Create(repository.UserRepositoryImplementation, user)
+	_, err = application.UserUseCaseImplementation.Create(repository, user)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -29,8 +28,8 @@ func CreateUserHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
-func ListUserHandler(c *gin.Context) {
-	users, err := application.UserUseCaseImplementation.List(repository.UserRepositoryImplementation)
+func ListUserHandler(c *gin.Context, repository *domain.IUserRepository) {
+	users, err := application.UserUseCaseImplementation.List(repository)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "não foi possível listar os usuários",
@@ -41,9 +40,9 @@ func ListUserHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
-func GetUserHandler(c *gin.Context) {
+func GetUserHandler(c *gin.Context, repository *domain.IUserRepository) {
 	id := c.Param("userId")
-	user, err := application.UserUseCaseImplementation.GetByID(repository.UserRepositoryImplementation, &id)
+	user, err := application.UserUseCaseImplementation.GetByID(repository, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -55,7 +54,7 @@ func GetUserHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func UpdateUserHandler(c *gin.Context) {
+func UpdateUserHandler(c *gin.Context, repository *domain.IUserRepository) {
 	data := &domain.User{}
 	err := c.ShouldBindJSON(data)
 	id := c.Param("userId")
@@ -63,11 +62,11 @@ func UpdateUserHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	user, err := application.UserUseCaseImplementation.Update(repository.UserRepositoryImplementation, data, &id)
+	user, err := application.UserUseCaseImplementation.Update(repository, data, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "não foi possível listar os usuários",
+			"error": "não foi possível atualizar os dados do usuário",
 		})
 		return
 	}
@@ -75,9 +74,9 @@ func UpdateUserHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func DeleteUserHandler(c *gin.Context) {
+func DeleteUserHandler(c *gin.Context, repository *domain.IUserRepository) {
 	id := c.Param("userId")
-	err := application.UserUseCaseImplementation.Destroy(repository.UserRepositoryImplementation, &id)
+	err := application.UserUseCaseImplementation.Destroy(repository, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

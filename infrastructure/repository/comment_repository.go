@@ -23,5 +23,3 @@ func (r *CommentRepository) Destroy(db *gorm.DB, data *domain.Comment, postId *s
 	}
 	return nil
 }
-
-var CommentRepositoryImplementation = domain.NewCommentRepository(new(CommentRepository))

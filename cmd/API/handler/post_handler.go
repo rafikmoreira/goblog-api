@@ -1,14 +1,14 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/rafikmoreira/go-blog-api/application"
 	"github.com/rafikmoreira/go-blog-api/domain"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/repository"
-	"net/http"
 )
 
-func CreatePostHandler(c *gin.Context) {
+func CreatePostHandler(c *gin.Context, repository *domain.IPostRepository) {
 	post := new(domain.Post)
 
 	err := c.ShouldBindJSON(&post)
@@ -18,7 +18,7 @@ func CreatePostHandler(c *gin.Context) {
 		return
 	}
 
-	err = application.PostUseCaseImplementation.Create(repository.PostRepositoryImplementation, post)
+	err = application.PostUseCaseImplementation.Create(repository, post)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -28,8 +28,8 @@ func CreatePostHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, post)
 }
-func ListPostHandler(c *gin.Context) {
-	posts, err := application.PostUseCaseImplementation.List(repository.PostRepositoryImplementation)
+func ListPostHandler(c *gin.Context, repository *domain.IPostRepository) {
+	posts, err := application.PostUseCaseImplementation.List(repository)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "não foi possível listar as postagens",
@@ -39,9 +39,9 @@ func ListPostHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, posts)
 }
-func GetPostHandler(c *gin.Context) {
+func GetPostHandler(c *gin.Context, repository *domain.IPostRepository) {
 	id := c.Param("postId")
-	post, err := application.PostUseCaseImplementation.GetByID(repository.PostRepositoryImplementation, &id)
+	post, err := application.PostUseCaseImplementation.GetByID(repository, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -52,7 +52,7 @@ func GetPostHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, post)
 }
-func UpdatePostHandler(c *gin.Context) {
+func UpdatePostHandler(c *gin.Context, repository *domain.IPostRepository) {
 	data := &domain.Post{}
 	err := c.ShouldBindJSON(data)
 	id := c.Param("postId")
@@ -60,7 +60,7 @@ func UpdatePostHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	post, err := application.PostUseCaseImplementation.Update(repository.PostRepositoryImplementation, data, &id)
+	post, err := application.PostUseCaseImplementation.Update(repository, data, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -71,9 +71,9 @@ func UpdatePostHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, post)
 }
-func DeletePostHandler(c *gin.Context) {
+func DeletePostHandler(c *gin.Context, repository *domain.IPostRepository) {
 	id := c.Param("postId")
-	err := application.PostUseCaseImplementation.Destroy(repository.PostRepositoryImplementation, &id)
+	err := application.PostUseCaseImplementation.Destroy(repository, &id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

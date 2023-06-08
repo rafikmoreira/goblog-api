@@ -58,5 +58,3 @@ func (r *PostRepository) Destroy(db *gorm.DB, data *domain.Post, id *string) err
 	}
 	return nil
 }
-
-var PostRepositoryImplementation = domain.NewPostRepository(new(PostRepository))

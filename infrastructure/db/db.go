@@ -2,7 +2,6 @@ package db
 
 import (
 	"github.com/rafikmoreira/go-blog-api/domain"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -17,13 +16,4 @@ func migrate(DBConnection *gorm.DB) {
 	}
 }
 
-func newDBConnection() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to migrate database")
-	}
-	migrate(db)
-	return db
-}
-
-var DBConnection = newDBConnection()
+var Connection = NewSQLiteDBConnection(migrate)
