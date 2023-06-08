@@ -52,7 +52,7 @@ func (h AuthHandler) Login(c *gin.Context) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := jwt.MapClaims{
-		"expires_at": time.Now().Add(10 * time.Minute).Unix(),
+		"expires_at": time.Now().Add(time.Hour).Unix(),
 		"authorized": true,
 		"user":       user,
 	}
@@ -62,7 +62,7 @@ func (h AuthHandler) Login(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Unauthorized",
+			"message": "unauthorized",
 			"error":   err.Error(),
 		})
 		return

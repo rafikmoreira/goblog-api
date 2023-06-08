@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// db connection
-	dbConnection := db.NewSQLiteDBConnection(db.Migrate)
+	dbConnection := db.NewPostgreSQLConnection(db.Migrate)
 
 	// repositories
 	var commentRepository domain.ICommentRepository = &repository.CommentRepository{
@@ -62,22 +62,22 @@ func main() {
 	})
 
 	// post routes
-	r.POST("/post", middleware.AuthMiddleware(), postHandler.CreatePost)
-	r.GET("/post", postHandler.ListPost)
-	r.GET("/post/:postId", postHandler.GetPost)
-	r.PATCH("/post/:postId", middleware.AuthMiddleware(), postHandler.UpdatePost)
-	r.DELETE("/post/:postId", middleware.AuthMiddleware(), postHandler.DeletePost)
-
-	// comment routes
-	r.POST("/post/:postId/comment", middleware.AuthMiddleware(), commentHandler.CreateComment)
-	r.DELETE("/post/:postId/comment/:commentId", middleware.AuthMiddleware(), commentHandler.DeleteComment)
+	postRoutes := r.Group("/post")
+	postRoutes.POST("", middleware.AuthMiddleware(), postHandler.CreatePost)
+	postRoutes.GET("", postHandler.ListPost)
+	postRoutes.GET("/:postId", postHandler.GetPost)
+	postRoutes.PATCH("/:postId", middleware.AuthMiddleware(), postHandler.UpdatePost)
+	postRoutes.DELETE("/:postId", middleware.AuthMiddleware(), postHandler.DeletePost)
+	postRoutes.POST("/:postId/comment", middleware.AuthMiddleware(), commentHandler.CreateComment)
+	postRoutes.DELETE("/:postId/comment/:commentId", middleware.AuthMiddleware(), commentHandler.DeleteComment)
 
 	// user routes
-	r.POST("/user", userHandler.CreateUser)
-	r.GET("/user", userHandler.ListUser)
-	r.GET("/user/:userId", userHandler.GetUser)
-	r.PATCH("/user/:userId", middleware.AuthMiddleware(), userHandler.UpdateUser)
-	r.DELETE("/user/:userId", middleware.AuthMiddleware(), userHandler.DeleteUser)
+	userRoutes := r.Group("/user")
+	userRoutes.POST("", userHandler.CreateUser)
+	userRoutes.GET("", userHandler.ListUser)
+	userRoutes.GET("/:userId", userHandler.GetUser)
+	userRoutes.PATCH("/:userId", middleware.AuthMiddleware(), userHandler.UpdateUser)
+	userRoutes.DELETE("/:userId", middleware.AuthMiddleware(), userHandler.DeleteUser)
 
 	// auth routes
 	r.POST("/auth", authHandler.Login)
