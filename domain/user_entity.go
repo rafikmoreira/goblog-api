@@ -19,16 +19,21 @@ type User struct {
 }
 
 type IUserRepository interface {
-	Create(db *gorm.DB, data *User) error
-	Update(db *gorm.DB, data *User, id *string) (*User, error)
-	GetByID(db *gorm.DB, id *string) (*User, error)
-	GetByEmail(db *gorm.DB, email *string) (*User, error)
-	List(db *gorm.DB) (*[]User, error)
-	Destroy(db *gorm.DB, data *User, id *string) error
+	Create(data *User) error
+	Update(data *User, id *string) (*User, error)
+	GetByID(id *string) (*User, error)
+	GetByEmail(email *string) (*User, error)
+	List() (*[]User, error)
+	Destroy(data *User, id *string) error
 }
 
-func NewUserRepository(userRepository IUserRepository) *IUserRepository {
-	return &userRepository
+type IUserUseCase interface {
+	Create(data *User) (*User, error)
+	Update(data *User, id *string) (*User, error)
+	GetByID(id *string) (*User, error)
+	GetByEmail(email *string) (*User, error)
+	List() (*[]User, error)
+	Destroy(id *string) error
 }
 
 func PasswordHash(password *string) (*string, error) {

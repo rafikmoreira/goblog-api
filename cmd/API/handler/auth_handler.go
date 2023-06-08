@@ -5,7 +5,6 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/rafikmoreira/go-blog-api/cmd/API/config"
 	"github.com/rafikmoreira/go-blog-api/domain"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/db"
 	"net/http"
 	"time"
 )
@@ -15,9 +14,14 @@ type Credentials struct {
 	Password string `json:"password"`
 }
 
-func AuthHandler(c *gin.Context, repository *domain.IUserRepository) {
+type AuthHandler struct {
+	UserUseCase *domain.IUserUseCase
+}
+
+func (h AuthHandler) Login(c *gin.Context) {
 	user := new(domain.User)
-	userRepository := *repository
+
+	userUseCase := *h.UserUseCase
 	credentials := new(Credentials)
 
 	err := c.BindJSON(credentials)
@@ -29,7 +33,7 @@ func AuthHandler(c *gin.Context, repository *domain.IUserRepository) {
 		return
 	}
 
-	user, err = userRepository.GetByEmail(db.Connection, &credentials.Email)
+	user, err = userUseCase.GetByEmail(&credentials.Email)
 
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{

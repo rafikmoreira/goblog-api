@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func migrate(DBConnection *gorm.DB) {
+func Migrate(DBConnection *gorm.DB) {
 	err := DBConnection.AutoMigrate(
 		&domain.Post{},
 		&domain.User{},
@@ -15,5 +15,3 @@ func migrate(DBConnection *gorm.DB) {
 		panic("failed to migrate database")
 	}
 }
-
-var Connection = NewSQLiteDBConnection(migrate)
