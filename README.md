@@ -24,10 +24,12 @@ To install and run this project, follow these steps:
 ## Dependencies
 This project uses the following third-party dependencies:
 
-- gin-gonic/gin v1.9.0: A web framework for building APIs in Go.
-- stretchr/testify v1.8.3: A testing toolkit for Go.
-- gorm.io/driver/sqlite v1.5.1: SQLite driver for the GORM ORM library.
-- gorm.io/gorm v1.25.1: A powerful ORM library for Go.
+- github.com/gin-gonic/gin: A web framework for building APIs in Go.
+- github.com/golang-jwt/jwt: JSON Web Token implementation for Go.
+- golang.org/x/crypto: Go cryptography libraries.
+- gorm.io/driver/postgres: PostgreSQL driver for the GORM ORM library.
+- gorm.io/driver/sqlite: SQLite driver for the GORM ORM library.
+- gorm.io/gorm: A powerful ORM library for Go.
 
 Please refer to the respective documentation for more information on each dependency.
 
