@@ -1,14 +1,14 @@
 package use_case
 
 import (
-	"github.com/rafikmoreira/go-blog-api/domain"
+	"github.com/rafikmoreira/go-blog-api/internal/entity"
 )
 
 type PostUseCase struct {
-	Repository *domain.IPostRepository
+	Repository *entity.IPostRepository
 }
 
-func (u *PostUseCase) Create(data *domain.Post) error {
+func (u *PostUseCase) Create(data *entity.Post) error {
 	postRepository := *u.Repository
 	err := postRepository.Create(data)
 	if err != nil {
@@ -17,7 +17,7 @@ func (u *PostUseCase) Create(data *domain.Post) error {
 	return nil
 }
 
-func (u *PostUseCase) Update(data *domain.Post, id *string) (*domain.Post, error) {
+func (u *PostUseCase) Update(data *entity.Post, id *string) (*entity.Post, error) {
 	postRepository := *u.Repository
 	update, err := postRepository.Update(data, id)
 
@@ -27,7 +27,7 @@ func (u *PostUseCase) Update(data *domain.Post, id *string) (*domain.Post, error
 	return update, nil
 }
 
-func (u *PostUseCase) GetByID(id *string) (*domain.Post, error) {
+func (u *PostUseCase) GetByID(id *string) (*entity.Post, error) {
 	postRepository := *u.Repository
 	post, err := postRepository.GetByID(id)
 	if err != nil {
@@ -36,7 +36,7 @@ func (u *PostUseCase) GetByID(id *string) (*domain.Post, error) {
 	return post, nil
 }
 
-func (u *PostUseCase) List() (*[]domain.Post, error) {
+func (u *PostUseCase) List() (*[]entity.Post, error) {
 	postRepository := *u.Repository
 	list, err := postRepository.List()
 	if err != nil {
@@ -47,7 +47,7 @@ func (u *PostUseCase) List() (*[]domain.Post, error) {
 
 func (u *PostUseCase) Destroy(id *string) error {
 	postRepository := *u.Repository
-	err := postRepository.Destroy(&domain.Post{}, id)
+	err := postRepository.Destroy(&entity.Post{}, id)
 	if err != nil {
 		return err
 	}

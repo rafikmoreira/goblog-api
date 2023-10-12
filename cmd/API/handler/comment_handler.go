@@ -4,16 +4,16 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/rafikmoreira/go-blog-api/domain"
+	"github.com/rafikmoreira/go-blog-api/internal/entity"
 )
 
 type CommentHandler struct {
-	CommentUseCase *domain.ICommentUseCase
+	CommentUseCase *entity.ICommentUseCase
 }
 
 func (h CommentHandler) CreateComment(c *gin.Context) {
 	commentUseCase := *h.CommentUseCase
-	comment := new(domain.Comment)
+	comment := new(entity.Comment)
 	postId := c.Param("postId")
 	err := c.ShouldBindJSON(&comment)
 

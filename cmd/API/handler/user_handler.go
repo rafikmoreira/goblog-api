@@ -2,16 +2,16 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/rafikmoreira/go-blog-api/domain"
+	"github.com/rafikmoreira/go-blog-api/internal/entity"
 	"net/http"
 )
 
 type UserHandler struct {
-	UserUseCase *domain.IUserUseCase
+	UserUseCase *entity.IUserUseCase
 }
 
 func (h UserHandler) CreateUser(c *gin.Context) {
-	user := new(domain.User)
+	user := new(entity.User)
 	userUseCase := *h.UserUseCase
 
 	err := c.ShouldBindJSON(&user)
@@ -62,7 +62,7 @@ func (h UserHandler) GetUser(c *gin.Context) {
 
 func (h UserHandler) UpdateUser(c *gin.Context) {
 	userUseCase := *h.UserUseCase
-	data := &domain.User{}
+	data := &entity.User{}
 	err := c.ShouldBindJSON(data)
 	id := c.Param("userId")
 	if err != nil {

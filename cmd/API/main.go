@@ -4,35 +4,35 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rafikmoreira/go-blog-api/cmd/API/handler"
 	"github.com/rafikmoreira/go-blog-api/cmd/API/middleware"
-	"github.com/rafikmoreira/go-blog-api/domain"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/db"
-	"github.com/rafikmoreira/go-blog-api/infrastructure/repository"
-	"github.com/rafikmoreira/go-blog-api/use_case"
+	"github.com/rafikmoreira/go-blog-api/internal/entity"
+	"github.com/rafikmoreira/go-blog-api/internal/infra/db"
+	"github.com/rafikmoreira/go-blog-api/internal/infra/repository"
+	"github.com/rafikmoreira/go-blog-api/internal/use_case"
 )
 
 func main() {
 	// db connection
-	dbConnection := db.NewPostgreSQLConnection(db.Migrate)
+	dbConnection := db.NewSQLiteDBConnection(db.Migrate)
 
 	// repositories
-	var commentRepository domain.ICommentRepository = &repository.CommentRepository{
+	var commentRepository entity.ICommentRepository = &repository.CommentRepository{
 		DB: dbConnection,
 	}
-	var postRepository domain.IPostRepository = &repository.PostRepository{
+	var postRepository entity.IPostRepository = &repository.PostRepository{
 		DB: dbConnection,
 	}
-	var userRepository domain.IUserRepository = &repository.UserRepository{
+	var userRepository entity.IUserRepository = &repository.UserRepository{
 		DB: dbConnection,
 	}
 
 	// use cases
-	var commentUseCase domain.ICommentUseCase = &use_case.CommentUseCase{
+	var commentUseCase entity.ICommentUseCase = &use_case.CommentUseCase{
 		Repository: &commentRepository,
 	}
-	var postUseCase domain.IPostUseCase = &use_case.PostUseCase{
+	var postUseCase entity.IPostUseCase = &use_case.PostUseCase{
 		Repository: &postRepository,
 	}
-	var userUseCase domain.IUserUseCase = &use_case.UserUseCase{
+	var userUseCase entity.IUserUseCase = &use_case.UserUseCase{
 		Repository: &userRepository,
 	}
 

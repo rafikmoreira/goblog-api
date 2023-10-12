@@ -1,18 +1,17 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
-	"github.com/rafikmoreira/go-blog-api/domain"
+	"github.com/rafikmoreira/go-blog-api/internal/entity"
+	"net/http"
 )
 
 type PostHandler struct {
-	PostUseCase *domain.IPostUseCase
+	PostUseCase *entity.IPostUseCase
 }
 
 func (h PostHandler) CreatePost(c *gin.Context) {
-	post := new(domain.Post)
+	post := new(entity.Post)
 	postUseCase := *h.PostUseCase
 	err := c.ShouldBindJSON(&post)
 
@@ -59,7 +58,7 @@ func (h PostHandler) GetPost(c *gin.Context) {
 }
 func (h PostHandler) UpdatePost(c *gin.Context) {
 	postUseCase := *h.PostUseCase
-	data := &domain.Post{}
+	data := &entity.Post{}
 	err := c.ShouldBindJSON(data)
 	id := c.Param("postId")
 	if err != nil {

@@ -1,15 +1,15 @@
 package db
 
 import (
-	"github.com/rafikmoreira/go-blog-api/domain"
+	"github.com/rafikmoreira/go-blog-api/internal/entity"
 	"gorm.io/gorm"
 )
 
 func Migrate(DBConnection *gorm.DB) {
 	err := DBConnection.AutoMigrate(
-		&domain.Post{},
-		&domain.User{},
-		&domain.Comment{},
+		&entity.Post{},
+		&entity.User{},
+		&entity.Comment{},
 	)
 	if err != nil {
 		panic("failed to migrate database")

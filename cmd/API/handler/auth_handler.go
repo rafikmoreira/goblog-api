@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 	"github.com/rafikmoreira/go-blog-api/cmd/API/config"
-	"github.com/rafikmoreira/go-blog-api/domain"
+	"github.com/rafikmoreira/go-blog-api/internal/entity"
 	"net/http"
 	"time"
 )
@@ -15,11 +15,11 @@ type Credentials struct {
 }
 
 type AuthHandler struct {
-	UserUseCase *domain.IUserUseCase
+	UserUseCase *entity.IUserUseCase
 }
 
 func (h AuthHandler) Login(c *gin.Context) {
-	user := new(domain.User)
+	user := new(entity.User)
 
 	userUseCase := *h.UserUseCase
 	credentials := new(Credentials)
@@ -42,7 +42,7 @@ func (h AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	if !domain.CheckPasswordHash(&credentials.Password, &user.Password) {
+	if !entity.CheckPasswordHash(&credentials.Password, &user.Password) {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "e-mail or password incorrect",
 		})
